@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Modal from 'react-modal';
 import DateTimePicker from 'react-datetime-picker';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 
 const customStyles = {
     content: {
@@ -23,15 +24,16 @@ export const CalendarModal = () => {
 
     const [dateStart, setDateStart] = useState( now.toDate())
     const [dateEnd, setDateEnd] = useState( end.toDate())
+    const [titleValid, setTitleValid] = useState( true )
 
     const [formValues, setFormValues] = useState({
         title:'Evento',
         notes:'',
-        start: now.toDate(),
-        end: end.toDate() 
+        startDate: now.toDate(),
+        endDate: end.toDate() 
     })
 
-    const { title, notes } = formValues
+    const { title, notes, startDate, endDate } = formValues
 
 
     const handleInputChange = ({ target }) => {
@@ -48,7 +50,7 @@ export const CalendarModal = () => {
         setDateStart( e )
         setFormValues({
             ...formValues,
-            start: e
+            startDate: e
         })
     }
 
@@ -56,13 +58,31 @@ export const CalendarModal = () => {
         setDateEnd( e )
         setFormValues({
             ...formValues,
-            end: e
+            endDate: e
         })
     }
 
     const handleSubmitForm = (e) => {
         e.preventDefault()
-        console.log(e);
+        const momentStart = moment( startDate )
+        const endStart = moment( endDate )
+       
+        if (momentStart.isSameOrAfter( endStart )) {
+           
+            Swal.fire('Error', 'La fecha fin debe de ser mayor a la fecha de inicio', 'error');
+            return;
+        }
+
+        if (title.trim().length < 2 ) {
+            setTitleValid( false )
+            return
+        }
+
+        //grabar base de datos
+
+        setTitleValid(true)
+        closeModal()
+        
     }
 
     const closeModal = () => {
@@ -108,7 +128,7 @@ export const CalendarModal = () => {
                             <label>Titulo y notas</label>
                             <input 
                                 type="text" 
-                                className="form-control"
+                                className={`form-control ${ !titleValid && 'is-invalid'}`}
                                 placeholder="Título del evento"
                                 name="title"
                                 autoComplete="off"
