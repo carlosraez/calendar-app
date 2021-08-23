@@ -9,7 +9,6 @@ import { uiCloseModal } from '../../actions/ui';
 import { eventAddNew } from '../../actions/events';
 
 
-
 const customStyles = {
     content: {
       top: '50%',
@@ -25,6 +24,13 @@ const customStyles = {
 const now = moment().minutes(0).seconds(0).add(1,'hours')
 const end = now.clone().add(1, 'hours')
 
+const initEvent = {
+    title:'',
+    notes:'',
+    startDate: now.toDate(),
+    endDate: end.toDate() 
+}
+
 
 export const CalendarModal = () => {
 
@@ -35,12 +41,7 @@ export const CalendarModal = () => {
     const [dateEnd, setDateEnd] = useState( end.toDate())
     const [titleValid, setTitleValid] = useState( true )
 
-    const [formValues, setFormValues] = useState({
-        title:'Evento',
-        notes:'',
-        startDate: now.toDate(),
-        endDate: end.toDate() 
-    })
+    const [formValues, setFormValues] = useState( initEvent )
 
     const { title, notes, startDate, endDate } = formValues
 
@@ -90,7 +91,11 @@ export const CalendarModal = () => {
         //grabar base de datos
         dispatch( eventAddNew({
             ...formValues,
-            id: new Date().getTime() //generamos id temporalmente
+            id: new Date().getTime(), //generamos id temporalmente
+            user: {
+                _id: '1234',
+                name: 'Fernando'
+            }
         }) )
 
         setTitleValid(true)
@@ -100,6 +105,7 @@ export const CalendarModal = () => {
 
     const closeModal = () => {
         dispatch( uiCloseModal() )
+        setFormValues( initEvent )
     }
 
     return (

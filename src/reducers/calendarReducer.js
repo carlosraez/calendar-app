@@ -13,6 +13,17 @@ const initialState = {
             name: 'Carlos'
         }
     
+    },{
+        title: 'Cumpleaños de Carlos',
+        start: moment().toDate(),
+        end:moment().add(4,'hours').toDate(),
+        bgcolor: '#fafafa',
+        notes: 'Comprar el pastel',
+        user: {
+            _id: '123',
+            name: 'Carlos'
+        }
+    
     }],
     activeEvent: null
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 
@@ -19,24 +19,13 @@ moment.locale('es')
 
 const localizer = momentLocalizer(moment)
 
-const myEventsList = [{
-    title: 'Cumpleaños del jefe',
-    start: moment().toDate(),
-    end:moment().add(2,'hours').toDate(),
-    bgcolor: '#fafafa',
-    notes: 'Comprar el pastel',
-    user: {
-        _id: '123',
-        name: 'Carlos'
-    }
-
-}]
-
 export const CalendarScreen = () => {
 
     const dispatch = useDispatch()
+    const  eventsList  = useSelector(state => state.calendar.events)
     const [lastView, setLastView] = useState(localStorage.getItem('lasView') || 'month')
 
+    console.log(eventsList);
 
     const onDobleClick = (e) => {
       
@@ -56,7 +45,7 @@ export const CalendarScreen = () => {
         
     }
 
-    const eventStyleGetter = (event, start, end, isSelected ) => {
+    const eventStyleGetter = () => {
 
         const style = {
             backgroundColor: '#367CF7',
@@ -70,12 +59,13 @@ export const CalendarScreen = () => {
     }
 
     return (
+        
         <div className="calendar-screen">
             <Navbar />
-
+           
             <Calendar
                 localizer={localizer}
-                events={myEventsList}
+                events={ eventsList  }
                 startAccessor="start"
                 endAccessor="end"
                 messages={ messages }
