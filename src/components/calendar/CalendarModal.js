@@ -6,6 +6,7 @@ import DateTimePicker from 'react-datetime-picker';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import { uiCloseModal } from '../../actions/ui';
+import { eventAddNew } from '../../actions/events';
 
 
 
@@ -87,6 +88,10 @@ export const CalendarModal = () => {
         }
 
         //grabar base de datos
+        dispatch( eventAddNew({
+            ...formValues,
+            id: new Date().getTime() //generamos id temporalmente
+        }) )
 
         setTitleValid(true)
         closeModal()
